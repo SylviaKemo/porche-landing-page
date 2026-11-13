@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Instrument_Serif } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 
 const geist = Geist({
@@ -28,6 +30,10 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${geist.variable} ${instrumentSerif.variable} font-sans antialiased`}>
         {children}
+        {/* Vercel Web Analytics (visits) and Speed Insights (real-user
+            performance). They only send data when deployed on Vercel. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
