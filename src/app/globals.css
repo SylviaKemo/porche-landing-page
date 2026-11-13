@@ -1,26 +1,234 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* Large screens: above 768px. At 768px and below the mobile behaviour applies. */
+@custom-variant desk (@media (min-width: 769px));
 
+/* Forge design tokens (from the Forge Website Design canvas) */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: #0b0b0b;
+  --color-ink-2: #0e0e0e;
+  --color-bone: #f2f0eb;
+  --color-soft: #e6e3dd;
+  --color-dim: #bdbab3;
+  --color-mute: #8a8a8a;
+  --color-line: #2a2a2a;
+  --color-accent: #c8102e;
+  --color-placeholder: #b0787c;
+  --color-placeholder-line: #6a2a2e;
+
+  /* Type scale. Change sizes here; every section uses these. */
+  --text-display: clamp(3rem, 5vw, 5rem); /* hero headline: 48px → 80px */
+  --text-heading: clamp(2rem, 4vw, 3.75rem); /* section headings: 32px → 60px */
+  --text-body: 12px; /* paragraphs */
+  --text-body--line-height: 1.6;
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), ui-serif, Georgia, serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  /* No CSS smooth scrolling: Lenis handles it, and the CSS version breaks GSAP pinning. */
+  body {
+    background: var(--color-ink);
+    color: var(--color-bone);
+    /* Font family comes from the `font-sans` class on <body> (Geist). */
+    -webkit-font-smoothing: antialiased;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Hero load-in: blur-up reveal per word. Pure CSS so it plays from the first
+   paint, before hydration. Each element sets --intro-delay for its stagger. */
+@keyframes intro-blur-rise {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+    filter: blur(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+}
+
+@keyframes intro-fade-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.intro-reveal {
+  animation: intro-blur-rise 1.4s cubic-bezier(0.215, 0.61, 0.355, 1) both;
+  animation-delay: var(--intro-delay, 0s);
+}
+
+.intro-reveal--soft {
+  animation-name: intro-fade-rise;
+  animation-duration: 1s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-reveal {
+    animation: none;
+  }
+}
+
+/* Glass button.
+   - Frosted dark glass fill with a faint 1px border.
+   - Two light glints sit on opposite sides of the border and travel slowly
+     clockwise around it, one loop every 4s (a rotating conic gradient,
+     masked to the border).
+   - On hover the glints stretch until the whole border is lit. */
+@property --glint-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+/* Half-width of each glint's bright core, and of its soft fade-out edge. */
+@property --glint-spread {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 2deg;
+}
+
+@property --glint-soft {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 10deg;
+}
+
+@keyframes glint-orbit {
+  to {
+    --glint-angle: 360deg;
+  }
+}
+
+.glass-btn {
+  position: relative;
+  isolation: isolate;
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.015) 55%, rgb(0 0 0 / 0.1)),
+    rgb(14 12 11 / 0.45);
+  border: 1px solid rgb(255 255 255 / 0.14);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.06),
+    0 10px 30px -12px rgb(0 0 0 / 0.6);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease;
+}
+
+/* The moving light, drawn on the border only. */
+.glass-btn::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  padding: 1px;
+  pointer-events: none;
+  /* Two glints centred at 0deg and 180deg: a bright core of ±spread with a
+     soft edge. At spread 90deg / soft 0deg the cores meet and the whole
+     border is lit evenly. */
+  --glint: rgb(255 255 255 / 0.95);
+  background: conic-gradient(
+    from var(--glint-angle),
+    var(--glint) 0deg,
+    var(--glint) var(--glint-spread),
+    transparent calc(var(--glint-spread) + var(--glint-soft)),
+    transparent calc(180deg - var(--glint-spread) - var(--glint-soft)),
+    var(--glint) calc(180deg - var(--glint-spread)),
+    var(--glint) calc(180deg + var(--glint-spread)),
+    transparent calc(180deg + var(--glint-spread) + var(--glint-soft)),
+    transparent calc(360deg - var(--glint-spread) - var(--glint-soft)),
+    var(--glint) calc(360deg - var(--glint-spread))
+  );
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask:
+    linear-gradient(#000 0 0) content-box exclude,
+    linear-gradient(#000 0 0);
+  animation: glint-orbit 4s linear infinite;
+  transition:
+    --glint-spread 0.4s cubic-bezier(0.65, 0, 0.35, 1),
+    --glint-soft 0.4s cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+.glass-btn:hover,
+.glass-btn:focus-visible {
+  border-color: rgb(255 255 255 / 0.3);
+}
+
+/* Glints grow until their cores meet and the whole border is lit. */
+.glass-btn:hover::before,
+.glass-btn:focus-visible::before {
+  --glint-spread: 90deg;
+  --glint-soft: 0deg;
+}
+
+/* Accent variant (final call to action): red glass. */
+.glass-btn--accent {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0) 60%),
+    rgb(200 16 46 / 0.85);
+  border-color: rgb(255 255 255 / 0.2);
+}
+
+.glass-btn--accent:hover {
+  background-color: rgb(220 30 60 / 0.95);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-btn::before {
+    animation: none;
+  }
+}
+
+/* Logo slider: slides by one full copy of the list, then loops seamlessly. */
+@keyframes marquee {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 80s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+@utility bg-diagonal {
+  background-color: var(--color-ink-2);
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgb(255 255 255 / 0.012) 0 2px,
+    transparent 2px 9px
+  );
+}
+
+@utility bg-texture {
+  background-color: var(--color-ink);
+  background-image: url("/images/texture.png");
+  background-size: cover;
+  background-position: center;
+}
+
+@utility eyebrow {
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-mute);
 }
