@@ -5,6 +5,7 @@ import Lenis from "lenis";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "lenis/dist/lenis.css";
+import { setLenis } from "@/lib/lenis";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -14,7 +15,10 @@ gsap.registerPlugin(ScrollTrigger);
  */
 export function SmoothScroll() {
   useEffect(() => {
-    const lenis = new Lenis({ lerp: 0.08, anchors: true });
+    // lerp 0.12: still smooth, but catches up with the wheel faster than the
+    // previous 0.08, which felt floaty and slow.
+    const lenis = new Lenis({ lerp: 0.12, anchors: true });
+    setLenis(lenis);
 
     lenis.on("scroll", ScrollTrigger.update);
     const tick = (time: number) => lenis.raf(time * 1000);
@@ -23,6 +27,7 @@ export function SmoothScroll() {
 
     return () => {
       gsap.ticker.remove(tick);
+      setLenis(null);
       lenis.destroy();
     };
   }, []);

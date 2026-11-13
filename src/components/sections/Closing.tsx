@@ -43,18 +43,19 @@ export function PreviousBuilds() {
 
 export function AvailableStock() {
   return (
+    // Full-screen showroom photo; copy centred at the top over the darker
+    // upper part of the photo, with a fade behind it for legibility.
     <Section id="stock" label="Available stock" className="flex-col items-center bg-ink px-4 pt-[110px] text-center">
-      {/* Dark ceiling behind the text at the top, the cars below it. */}
       <Image
-        src="/images/stock-collection.jpg"
-        alt="Five Porsche 918 Spyders parked in a dark, lit garage"
+        src="/images/stock-showroom-hd.jpg"
+        alt="Porsche showroom with a white 911 GT3 RS and other cars under spotlights"
         fill
         sizes="100vw"
-        className="-z-20 object-cover object-[50%_45%]"
+        className="-z-20 object-cover object-[50%_55%]"
       />
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(11,11,11,0.55),rgba(11,11,11,0)_60%)]"
+        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(11,11,11,0.75),rgba(11,11,11,0.35)_45%,rgba(11,11,11,0)_70%)]"
       />
       <h2 className={`${display} text-heading`}>Available Stock</h2>
       <p className="mt-6 max-w-[400px] text-body text-soft">
@@ -70,18 +71,8 @@ export function AvailableStock() {
 
 export function FinalCta() {
   return (
-    <Section id="start" label="Start your project" className="flex-col items-center justify-center bg-black px-4 py-28 text-center">
-      <Image
-        src="/images/cta-ocean.jpg"
-        alt="Three cars parked facing the ocean"
-        fill
-        sizes="100vw"
-        className="-z-20 object-cover object-[center_65%]"
-      />
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[linear-gradient(180deg,rgba(0,0,0,0.92),rgba(0,0,0,0.82)_50%,rgba(0,0,0,0.95))]"
-      />
+    // Same dark texture as the hero, so the page closes the way it opened.
+    <Section id="start" label="Start your project" className="bg-texture flex-col items-center justify-center px-4 py-28 text-center">
       <p className="eyebrow mb-6">Are you ready to</p>
       <h2 className={`${display} text-heading`}>
         Refuse

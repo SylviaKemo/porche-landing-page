@@ -55,27 +55,44 @@ export function OrdinaryScene() {
         let titleShown = true;
         let endsShown = false;
 
+        // Layout positions within the stage, measured once (and again on
+        // resize) so scrolling never forces the browser to recalculate layout.
+        // The red car's live position = its layout top + its animated `y`.
+        let geo = { redTop: 0, redHeight: 0, titleTop: 0, endsTop: 0 };
+        const measure = () => {
+          geo = {
+            redTop: group.offsetTop + red.offsetTop,
+            redHeight: red.offsetHeight,
+            titleTop: title.offsetTop,
+            endsTop: ends.offsetTop + endsHeading.offsetTop,
+          };
+        };
+        measure();
+
         gsap
           .timeline({
             defaults: { ease: "none" },
             scrollTrigger: {
               trigger: track.current,
               start: "top top",
-              end: "bottom bottom",
+              // The animation runs over 2 screens of scrolling; the track's last
+              // screen is left for Previous Builds to slide up over the stage.
+              end: "+=200%",
               scrub: true,
               invalidateOnRefresh: true,
+              onRefresh: measure,
             },
             // The headings follow the red car: "Ordinary" hides once the red
             // car fully covers it, "Ends Here" appears once the red car has
             // cleared it. Reverses when scrolling back.
             onUpdate: () => {
-              const r = red.getBoundingClientRect();
-              const showTitle = r.top > title.getBoundingClientRect().top;
+              const redTop = geo.redTop + (gsap.getProperty(red, "y") as number);
+              const showTitle = redTop > geo.titleTop;
               if (showTitle !== titleShown) {
                 titleShown = showTitle;
                 gsap.set(title, { opacity: showTitle ? 1 : 0 });
               }
-              const showEnds = r.bottom < endsHeading.getBoundingClientRect().top - 24;
+              const showEnds = redTop + geo.redHeight < geo.endsTop - 24;
               if (showEnds !== endsShown) {
                 endsShown = showEnds;
                 gsap.to(ends, { opacity: showEnds ? 1 : 0, y: showEnds ? 0 : 40, duration: 0.5, overwrite: true });
@@ -93,8 +110,9 @@ export function OrdinaryScene() {
   );
 
   return (
-    // 3 screens tall: the sticky stage holds for 2 screens of scrolling.
-    <section ref={track} aria-label="Ordinary ends here" className="relative h-[300svh]">
+    // 4 screens tall: the sticky stage holds for 2 screens of animation, then
+    // for 1 more while Previous Builds (pulled up 1 screen) slides over it.
+    <section ref={track} aria-label="Ordinary ends here" className="relative h-[400svh]">
       <div className="bg-texture sticky top-0 h-svh overflow-hidden">
         {/* Large screens: bigger headings (6.6% of the screen width, up to
             127px at 1920px), as in the reference. */}

@@ -8,15 +8,15 @@ import { ServicesIntro } from "@/components/sections/ServicesIntro";
 import { ServicesList } from "@/components/sections/ServicesList";
 import { ServicesMotion } from "@/components/sections/ServicesMotion";
 import { OrdinaryScene } from "@/components/sections/OrdinaryScene";
-import { AvailableStock, FinalCta } from "@/components/sections/Closing";
-// import { PreviousBuilds } from "@/components/sections/Closing"; // disabled, see below
+import { AvailableStock, FinalCta, PreviousBuilds } from "@/components/sections/Closing";
 
 export default function Home() {
   return (
     <>
       <SmoothScroll />
       <SiteHeader />
-      <main>
+      {/* z-[1]: the page sits above the menu, which is revealed by clipping it. */}
+      <main className="relative z-[1]">
         <Hero />
         <Approach />
         <Pillars />
@@ -25,11 +25,21 @@ export default function Home() {
           <ServicesList />
         </ServicesMotion>
         <OrdinaryScene />
-        {/* Disabled for now. To bring back: uncomment this and the import above,
-            and the "Previous Builds" link in navLinks (content/site.ts). */}
-        {/* <PreviousBuilds /> */}
-        <AvailableStock />
-        <FinalCta />
+        {/* Closing sections stack as layers: each one slides up over the one
+            before, which holds still (CSS sticky, so no scroll work). Pulled up
+            one screen so Previous Builds slides over the end of the Ordinary
+            scene too. Later layers paint on top of earlier ones. */}
+        <div className="relative z-10 -mt-[100svh]">
+          <div className="sticky top-0 shadow-[0_-40px_80px_rgba(0,0,0,0.6)]">
+            <PreviousBuilds />
+          </div>
+          <div className="sticky top-0 shadow-[0_-40px_80px_rgba(0,0,0,0.6)]">
+            <AvailableStock />
+          </div>
+          <div className="relative shadow-[0_-40px_80px_rgba(0,0,0,0.6)]">
+            <FinalCta />
+          </div>
+        </div>
       </main>
       <ScrollProgress />
     </>

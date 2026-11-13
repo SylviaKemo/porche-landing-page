@@ -2,6 +2,13 @@ import type { SocialIconName } from "@/components/ui/icons";
 
 export const CONTACT_HREF = "#start";
 
+/**
+ * Phone number for the header's call button on phones, in international
+ * format, e.g. "+441234567890". Until it's set, the button jumps to the
+ * contact section instead of calling.
+ */
+export const CONTACT_PHONE = "";
+
 export type CarCutout = {
   src: string;
   width: number;
@@ -26,17 +33,20 @@ export const ordinaryCars: CarCutout[] = [
 export const socialLinks: { name: string; href: string; icon: SocialIconName }[] = [
   { name: "LinkedIn", href: "#", icon: "linkedin" },
   { name: "Instagram", href: "#", icon: "instagram" },
-  { name: "Facebook", href: "#", icon: "circle" },
+  { name: "Facebook", href: "#", icon: "facebook" },
 ];
 
-export const navLinks = [
-  { label: "Home", href: "#top" },
-  { label: "Approach", href: "#approach" },
-  { label: "Philosophy", href: "#identity" },
-  { label: "Services", href: "#services" },
-  // { label: "Previous Builds", href: "#builds" }, // section disabled (see app/page.tsx)
-  { label: "Available Stock", href: "#stock" },
-  { label: "Start Your Project", href: CONTACT_HREF },
+/** The menu's main links (large), as in the reference. */
+export const menuLinks = [
+  { label: "Builds", href: "#builds" },
+  { label: "Stock", href: "#stock" },
+  { label: "Contact", href: CONTACT_HREF },
+];
+
+/** Small links under the menu. No pages exist for these yet. */
+export const menuLegalLinks = [
+  { label: "Legal", href: "#" },
+  { label: "Cookie settings", href: "#" },
 ];
 
 export type Marque = { name: string; logo: string };
