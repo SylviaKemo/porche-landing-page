@@ -18,11 +18,11 @@ export function PreviousBuilds() {
           headlight lands in the upper part of the screen on wide screens,
           clear of the heading below. */}
       <Image
-        src="/images/previous-builds-front.jpg"
-        alt="Front of a red supercar in a dark studio, headlight lit"
+        src="/images/previous-builds-918.jpg"
+        alt="Front of a silver Porsche 918 Spyder against a red wall, headlights on"
         fill
         sizes="100vw"
-        className="-z-20 object-cover object-[53%_53%]"
+        className="-z-20 object-cover object-[50%_63%]"
       />
       {/* Darkens the bottom so the heading and button read over the floor. */}
       <div

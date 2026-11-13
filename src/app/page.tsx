@@ -1,6 +1,7 @@
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { ScrollProgress } from "@/components/layout/ScrollProgress";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { SiteFooter } from "@/components/layout/SiteFooter";
 import { Hero } from "@/components/sections/Hero";
 import { Approach } from "@/components/sections/Approach";
 import { Pillars } from "@/components/sections/Pillars";
@@ -38,6 +39,7 @@ export default function Home() {
           </div>
           <div className="relative shadow-[0_-40px_80px_rgba(0,0,0,0.6)]">
             <FinalCta />
+            <SiteFooter />
           </div>
         </div>
       </main>

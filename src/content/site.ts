@@ -36,12 +36,19 @@ export const socialLinks: { name: string; href: string; icon: SocialIconName }[]
   { name: "Facebook", href: "#", icon: "facebook" },
 ];
 
-/** The menu's main links (large), as in the reference. */
+/** The menu's main links (large): every section on the page, in order. */
 export const menuLinks = [
+  { label: "Home", href: "#top" },
+  { label: "Approach", href: "#approach" },
+  { label: "Philosophy", href: "#identity" },
+  { label: "Services", href: "#services" },
   { label: "Builds", href: "#builds" },
   { label: "Stock", href: "#stock" },
   { label: "Contact", href: CONTACT_HREF },
 ];
+
+/** "Developed by devKey" link in the footer. Set the URL when you have it. */
+export const DEVELOPER = { name: "devKey", href: "#" };
 
 /** Small links under the menu. No pages exist for these yet. */
 export const menuLegalLinks = [
@@ -90,9 +97,9 @@ export const pillars: Pillar[] = [
     index: "02",
     title: "Insight",
     body: "Exterior, interior and performance are brought together through a considered, detail-led approach, creating one complete and fully resolved vision.",
-    image: "/images/pillar-insight.jpg",
-    alt: "Classic supercars parked in a row",
-    objectPosition: "center 60%",
+    image: "/images/pillar-insight-interior.jpg",
+    alt: "White leather Porsche interior seen from above, black steering wheel",
+    objectPosition: "50% 15%", // steering wheel in frame
     gradient: "linear-gradient(180deg,#3B3936 0%,#262523 60%,#151413 100%)",
   },
   {
@@ -100,9 +107,9 @@ export const pillars: Pillar[] = [
     index: "03",
     title: "Cohesion",
     body: "Every modification is chosen with precision, ensuring each detail adds purpose, balance and distinction to the final bespoke automotive build.",
-    image: "/images/pillar-cohesion.jpg",
-    alt: "Black 911 rear with decal",
-    objectPosition: "center 45%",
+    image: "/images/pillar-cohesion-rear.jpg",
+    alt: "Rear of a white Porsche concept car at an unveiling, light bar glowing",
+    objectPosition: "50% 85%", // the car's rear in frame
     gradient: "linear-gradient(180deg,#222120 0%,#121111 60%,#0A0A0A 100%)",
   },
 ];

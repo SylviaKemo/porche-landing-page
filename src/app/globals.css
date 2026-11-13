@@ -214,6 +214,13 @@
   animation: marquee 80s linear infinite;
 }
 
+/* Phones: logos are smaller, so the same loop time would crawl. */
+@media (max-width: 768px) {
+  .marquee-track {
+    animation-duration: 25s;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .marquee-track {
     animation: none;

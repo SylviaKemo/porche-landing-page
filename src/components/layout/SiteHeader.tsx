@@ -93,7 +93,12 @@ export function SiteHeader() {
 
       const onResize = () => applyClip.current();
       window.addEventListener("resize", onResize);
-      return () => window.removeEventListener("resize", onResize);
+      return () => {
+        window.removeEventListener("resize", onResize);
+        // Never leave the page clipped if this is torn down mid-animation.
+        main.style.clipPath = "";
+        getLenis()?.start();
+      };
     },
     { scope: menuRef },
   );
@@ -230,7 +235,8 @@ export function SiteHeader() {
                 <a
                   href={l.href}
                   onClick={(e) => goTo(e, l.href)}
-                  className="menu-link block font-serif text-[clamp(3rem,12.5vw,7.5rem)] leading-[1.02] font-normal text-bone uppercase transition-colors duration-300 hover:text-bone/60"
+                  // Sized by width and height so all seven links fit any screen.
+                  className="menu-link block font-serif text-[clamp(2rem,min(10vw,7svh),5rem)] leading-[1.05] font-normal text-bone uppercase transition-colors duration-300 hover:text-bone/60"
                 >
                   {l.label}
                 </a>
